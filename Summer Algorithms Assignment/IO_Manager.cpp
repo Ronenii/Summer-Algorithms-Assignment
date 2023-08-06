@@ -1,30 +1,38 @@
 #include "IO_Manager.h"
 
-// Method which runs the entire program. 
-//void io_manager::run_program()
-//{
-//	list<vertex> euler_circuit;
-//	graph* input_graph;
-//	input_graph = get_user_input();
-//	if (input_graph != nullptr)
-//	{
-//		int complete_edges_counter = 0;
-//		get_graph_input(input_graph, complete_edges_counter);
-//		if (complete_edges_counter == input_graph->get_num_of_edges())
-//		{
-//			if (input_graph->is_euler())
-//			{
-//				cout << "The graph is aulerian" << endl;
-//				get_and_print_euler_circuit(input_graph);
-//			}
-//			else
-//			{
-//				cout << "The graph is not aulerian" << endl;
-//			}
-//		}
-//		delete(input_graph);
-//	}
-//}
+// Method which runs the entire program.
+// The program will determine which vertexes are bridges.
+void io_manager::run_program()
+{
+	list<vertex> euler_circuit;
+	graph* input_graph;
+	input_graph = get_user_input();
+	if (input_graph != nullptr)
+	{
+		int complete_edges_counter = 0;
+		get_graph_input(input_graph, complete_edges_counter);
+		if (complete_edges_counter == input_graph->get_num_of_edges())
+		{
+            // If the graph is connected, we will find the bridges.
+            graph* dummy_graph = input_graph->get_dummy_graph();
+            if (dummy_graph->is_connected())
+            {
+                input_graph->set_all_white();
+                vector<vertex> bridges = input_graph->find_bridges();
+                cout << "\nThe bridges are: ";
+                for (vertex& bridge : bridges)
+                {
+                    cout << bridge.get_value() << " ";
+                }
+            }
+            else
+            {
+                cout << "The graph is not connected, therefore it has no bridges." << endl;
+            }
+		}
+		delete(input_graph);
+	}
+}
 
 // Receives user input and creates a directed or non directed graph with empty vertices based on the input.
 // returns said graph.

@@ -32,4 +32,7 @@ public:
 
 	virtual bool is_euler() = 0;
 	virtual bool is_directed() = 0;
+    virtual bool is_connected() = 0;
+    virtual graph* dfs(vertex& i_vertex) = 0;
+    virtual vector<vertex> find_bridges() = 0;
 };
