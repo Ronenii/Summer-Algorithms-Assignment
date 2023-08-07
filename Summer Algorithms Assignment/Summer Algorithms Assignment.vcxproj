@@ -139,6 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="DirectedGraph.cpp" />
     <ClCompile Include="Graph.cpp" />
     <ClCompile Include="IO_Manager.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -146,6 +147,7 @@
     <ClCompile Include="Vertex.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DirectedGraph.h" />
     <ClInclude Include="Exceptions.h" />
     <ClInclude Include="Graph.h" />
     <ClInclude Include="IO_Manager.h" />

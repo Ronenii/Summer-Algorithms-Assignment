@@ -28,11 +28,8 @@ public:
 	//void paste_circuit(list<vertex*>& i_dst, list<vertex*>& i_src, int i_start_index);
 	//vertex& get_vertex_from_circuit(list<vertex*>& i_circuit, int i_index);
 	virtual void mark_edge(vertex& i_current_vertex, vertex& i_neighbor_vertex) = 0;
-	virtual graph* get_dummy_graph() = 0;
 
-	virtual bool is_euler() = 0;
-	virtual bool is_directed() = 0;
-    virtual bool is_connected() = 0;
-    virtual graph* dfs(vertex& i_vertex) = 0;
-    virtual vector<vertex> find_bridges() = 0;
+	virtual bool is_connected()=0;
+	virtual graph* get_dummy_graph() = 0;
+	virtual vector<vertex> find_bridges() = 0;
 };

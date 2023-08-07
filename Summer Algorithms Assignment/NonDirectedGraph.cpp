@@ -30,19 +30,6 @@ graph* non_directed_graph::get_dummy_graph()
 	return dummy_graph;
 }
 
-
-bool non_directed_graph::is_euler()
-{
-    if (!is_connected())
-        return false;
-    return is_even_degrees();
-}
-
-bool non_directed_graph::is_directed()
-{
-    return false;
-}
-
 bool non_directed_graph::is_connected()
 {
     set_all_white();
@@ -50,10 +37,38 @@ bool non_directed_graph::is_connected()
     return is_all_black();
 }
 
-
-graph* non_directed_graph::dfs(vertex& i_vertex)
+// Creates a directed graph based on a dfs run on this non directed graph
+directed_graph* non_directed_graph::create_directed_graph_with_dfs()
 {
+    directed_graph * ret = new directed_graph(this->get_num_of_vertexes(), get_num_of_edges());
+	non_directed_graph * dg = dynamic_cast<non_directed_graph*>(get_dummy_graph());
 
+    for (vertex & v : m_vertexes)
+    {
+		dg->visit_and_direct(v, *ret);
+    }
+
+	delete dg;
+	return ret;
+}
+
+// A dfs visit with a modification that directs the edges according to the dfs run direction. Sets the directed edge in 'i_directed_graph'
+void visit_and_direct(vertex & i_vertex, graph & i_directed_graph)
+{
+	list<vertex> neighbors = i_vertex.get_neighbors();
+	if(i_vertex.get_color() == Color::WHITE)
+	{
+		i_vertex.set_color(Color::GRAY);
+		for (vertex& v : neighbors)
+		{
+			if (v.get_color() == Color::WHITE)
+			{
+				i_directed_graph.set_edge(i_vertex, v);
+				visit_and_direct(v, i_directed_graph);
+			}
+		}
+		i_vertex.set_color(Color::BLACK);
+	}
 }
 
 
