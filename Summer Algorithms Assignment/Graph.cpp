@@ -1,5 +1,7 @@
 #include "Graph.h"
 
+#include <string>
+
 // Initializes a graph with the given number of vertices.
 graph::graph(int i_num_of_vertexes, int i_num_of_edges) : m_num_of_vertexes(i_num_of_vertexes), m_num_of_edges(i_num_of_edges)
 {
