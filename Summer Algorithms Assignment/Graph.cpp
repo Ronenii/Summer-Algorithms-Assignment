@@ -1,5 +1,7 @@
 #include "Graph.h"
 
+#include <string>
+
 // Initializes a graph with the given number of vertices.
 graph::graph(int i_num_of_vertexes, int i_num_of_edges) : m_num_of_vertexes(i_num_of_vertexes), m_num_of_edges(i_num_of_edges)
 {
@@ -36,8 +38,14 @@ void graph::visit(vertex& i_vertex)
 	i_vertex.set_color(Color::GRAY);
 	for (auto& neighbor : neighbors)
 	{
-		vertex& real_neighbor = m_vertexes[neighbor.get_value() - 1]; //
-		mark_edge(i_vertex, real_neighbor);
+		vertex& real_neighbor = m_vertexes[neighbor.get_value() - 1];
+        if(real_neighbor.get_color() != Color::WHITE){
+            continue;
+        }
+        cout<< "Visiting vertex " + to_string(real_neighbor.get_value()) + " ";
+        // We want to make the graph directed so we delete the edge from the neighbor to the current vertex
+        // but not the other way around.
+        real_neighbor.get_neighbors().remove(i_vertex);
 		visit(real_neighbor);
 	}
 	i_vertex.set_color(Color::BLACK);
