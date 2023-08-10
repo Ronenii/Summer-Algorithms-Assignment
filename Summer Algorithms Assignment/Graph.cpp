@@ -42,10 +42,19 @@ void graph::visit(vertex& i_vertex)
         if(real_neighbor.get_color() != Color::WHITE){
             continue;
         }
+
+		if(real_neighbor.get_value() == 4){
+			cout << "debug";
+		}
         cout<< "Visiting vertex " + to_string(real_neighbor.get_value()) + " ";
-        // We want to make the graph directed so we delete the edge from the neighbor to the current vertex
-        // but not the other way around.
+
+        // We want to make the graph directed, so we delete the edge from the neighbor to the current vertex
         real_neighbor.get_neighbors().remove(i_vertex);
+
+        // mark the parent of the neighbor
+        // This is for the purpose of finding the SCC later
+        real_neighbor.set_parent(i_vertex);
+
 		visit(real_neighbor);
 	}
 	i_vertex.set_color(Color::BLACK);

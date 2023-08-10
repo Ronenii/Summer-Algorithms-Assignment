@@ -15,7 +15,7 @@ void io_manager::run_program()
 		{
             // If the graph is connected, we will find the bridges.
             graph* dummy_graph = input_graph->get_dummy_graph();
-            if (dummy_graph->is_connected())
+            if (input_graph->is_connected())
             {
                 input_graph->set_all_white();
                 vector<vertex> bridges = input_graph->find_bridges();
@@ -80,7 +80,7 @@ void io_manager::get_graph_input(graph* i_graph, int& o_completed_edges)
 		try
 		{
 			get_edge_input(v1, v2, i_graph->get_num_of_vertexes());
-			i_graph->set_edge(i_graph->get_vertex_by_value(v1), i_graph->get_vertex_by_value(v2));
+			i_graph->set_edge(i_graph->get_vertex_by_value(v1), i_graph->get_vertex_by_value(v2), true);
 			o_completed_edges++;
 		}
 		catch (const invalid_input_exception& e)

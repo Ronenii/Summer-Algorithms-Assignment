@@ -29,6 +29,10 @@ bool vertex::has_neighbors()
 	return !m_neighbors.empty();
 }
 
+void vertex::set_parent(vertex &vertex) {
+    m_parent = vertex.m_value;
+}
+
 ////Returns the vertex @ the given index.
 //vertex& vertex::get_vertex_from_circuit(list<vertex*>& i_circuit, int i_index)
 //{

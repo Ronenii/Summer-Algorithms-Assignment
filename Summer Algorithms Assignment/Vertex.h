@@ -12,6 +12,7 @@ private:
 	int m_in_degree = 0, m_out_degree = 0, m_degree = 0;
 	int m_value;
 	Color m_color = Color::WHITE;
+    int m_parent = -1;
 	list<vertex> m_neighbors; // change to by value.
 public:
 	vertex(int i_value = 0) { m_value = i_value; }
@@ -33,4 +34,8 @@ public:
 	bool has_neighbors();
 	static vertex& get_vertex_from_circuit(list<vertex*>& i_circuit, int i_index);
 	static void paste_circuit(list<vertex*>& i_dst, list<vertex*>& i_src, int i_start_index);
+
+    void set_parent(vertex &vertex);
+	int get_parent() const { return m_parent;}
+	void set_parent(int i_parent) { m_parent = i_parent; }
 };
