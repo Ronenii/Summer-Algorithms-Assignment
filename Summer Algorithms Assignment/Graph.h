@@ -23,13 +23,12 @@ public:
 	virtual vertex& get_vertex_by_value(int i_value) { return m_vertexes[i_value - 1]; }
 	virtual void set_edge(vertex& i_src, vertex& i_dst) = 0;
     virtual void set_edge(int i_src, int i_dst) = 0;
-    virtual directed_graph* get_directed_graph() = 0;
+    virtual directed_graph* get_directed_graph(list<vertex>& ending_list) = 0;
 	void visit(vertex& i_vertex);
 	void set_all_white();
 	bool is_all_black();
 	list<vertex*> find_circuit(vertex& i_vertex);
 	virtual void mark_edge(vertex& i_current_vertex, vertex& i_neighbor_vertex) = 0;
-
 	virtual bool is_connected() = 0;
 	virtual graph* get_dummy_graph() = 0;
 	virtual vector<pair<int, int>> find_bridges() = 0;

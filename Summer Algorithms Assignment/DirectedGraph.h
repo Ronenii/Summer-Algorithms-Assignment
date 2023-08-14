@@ -19,5 +19,5 @@ public:
     graph* get_dummy_graph() override;
     bool is_connected() override;
     vector<pair<int, int>> find_bridges() override;
-    directed_graph* get_directed_graph() override { return this;}
+    directed_graph* get_directed_graph(list<vertex>& ending_list) override { return this;}
 };

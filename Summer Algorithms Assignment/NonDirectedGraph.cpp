@@ -47,7 +47,8 @@ bool non_directed_graph::is_connected()
 
 // A dfs visit with a modification that directs the edges according to the dfs run direction. Sets the directed edge in 'i_directed_graph'
 // We run with DFS on the non directed graph and modify the given directed graph.
-void non_directed_graph::visit_and_direct(vertex & i_vertex, graph & i_directed_graph)
+// 
+void non_directed_graph::visit_and_direct(vertex & i_vertex, graph & i_directed_graph, list<vertex>& ending_list)
 {
 	const list<vertex>& neighbors = i_vertex.get_neighbors();
 
@@ -60,10 +61,11 @@ void non_directed_graph::visit_and_direct(vertex & i_vertex, graph & i_directed_
 			if (real_neighbor.get_color() == Color::WHITE)
 			{
                 i_directed_graph.set_edge(i_vertex.get_value(), real_neighbor.get_value());
-				visit_and_direct(real_neighbor, i_directed_graph);
+				visit_and_direct(real_neighbor, i_directed_graph, ending_list);
 			}
 		}
 		i_vertex.set_color(Color::BLACK);
+        ending_list.push_back(i_vertex);
 	}
 }
 
@@ -74,8 +76,9 @@ vector<pair<int, int>> non_directed_graph::find_bridges()
     // If the parent vertex is not the same as the vertex we started from, then we have a bridge.
 
     vector<pair<int, int>> bridges;
+    list<vertex> ending_list;
 
-    graph* dg = get_directed_graph();
+    graph* dg = get_directed_graph(ending_list);
 
     graph * dgt = dynamic_cast<directed_graph*>(dg)->get_transposed();
 
@@ -122,9 +125,9 @@ vector<vertex> non_directed_graph::transpose(vector<vertex> &i_vertexes) {
 }
 
 // Returns a directed graph from this non directed graph using a DFS run.
-directed_graph *non_directed_graph::get_directed_graph() {
+directed_graph *non_directed_graph::get_directed_graph(list<vertex>& ending_list) {
     directed_graph* directed = new directed_graph(m_num_of_vertexes, m_num_of_edges);
-    visit_and_direct(m_vertexes[0], *directed);
+    visit_and_direct(m_vertexes[0], *directed, ending_list);
     return directed;
 }
 

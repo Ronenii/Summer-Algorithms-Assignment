@@ -36,6 +36,7 @@ void directed_graph::mark_edge(vertex& i_current_vertex, vertex& i_neighbor_vert
 
 }
 
+// Returns the transposed version of this directed graph.
 directed_graph* directed_graph::get_transposed()
 {
     directed_graph* transposed = new directed_graph(m_num_of_vertexes, m_num_of_edges);
