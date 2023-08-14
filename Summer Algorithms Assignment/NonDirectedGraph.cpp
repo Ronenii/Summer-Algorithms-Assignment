@@ -47,7 +47,8 @@ bool non_directed_graph::is_connected()
 
 // A dfs visit with a modification that directs the edges according to the dfs run direction. Sets the directed edge in 'i_directed_graph'
 // We run with DFS on the non directed graph and modify the given directed graph.
-// 
+//
+// TODO: Add prev field and adjust set edge to always set an edge between vertices unless its an edge to a prev.
 void non_directed_graph::visit_and_direct(vertex& i_vertex, graph& i_directed_graph, list<vertex>& ending_list)
 {
 	const list<vertex>& neighbors = i_vertex.get_neighbors();
