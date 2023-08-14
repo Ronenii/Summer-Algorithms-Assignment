@@ -14,8 +14,6 @@ void io_manager::run_program()
 
 		if (complete_edges_counter == input_graph->get_num_of_edges())
 		{
-			input_graph->set_all_white();
-
 			const vector<pair<int, int>> bridges = input_graph->find_bridges();
 
            

@@ -6,6 +6,9 @@
 
 class non_directed_graph: public graph
 {
+private:
+	void DFS_on_transposed_with_ending_list(directed_graph* transposed_graph, list<vertex>& ending_list);
+	void visit_and_mark_rep(vertex & i_vertex, const int rep);
 public:
 	non_directed_graph(int i_num_of_vertexes, int i_num_of_edges) :graph(i_num_of_vertexes, i_num_of_edges) {}
 	~non_directed_graph() = default;
