@@ -74,8 +74,10 @@ graph* directed_graph::get_dummy_graph()
     return dummy_graph;
 }
 
-vector<vertex> directed_graph::find_bridges() {
+vector<pair<int, int>> directed_graph::find_bridges() {
     cout << "find_bridges() is not implemented for directed graph" << endl;
+
+    return vector<pair<int,int>>();
 }
 
 bool directed_graph::is_connected()

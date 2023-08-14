@@ -16,9 +16,9 @@ public:
 	bool is_even_degrees();
     void stronglyConnectedComponents();
     vector<vertex>  transpose(vector<vertex> &i_vertexes);
-    vector<vertex> find_bridges() override;
+	vector<pair<int, int>> find_bridges() override;
 	graph* get_dummy_graph() override;
     bool is_connected() override;
-    graph* get_directed_graph();
+	directed_graph* get_directed_graph();
 
 };

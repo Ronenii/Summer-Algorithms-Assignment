@@ -11,16 +11,18 @@ void io_manager::run_program()
 		int complete_edges_counter = 0;
 		get_graph_input(input_graph, complete_edges_counter);
 
-        graph* directed_graph = input_graph->get_directed_graph();
 
 		if (complete_edges_counter == input_graph->get_num_of_edges())
 		{
-            input_graph->set_all_white();
-            vector<vertex> bridges = input_graph->find_bridges();
+			input_graph->set_all_white();
+
+			const vector<pair<int, int>> bridges = input_graph->find_bridges();
+
+           
             cout << "\nThe bridges are: ";
-            for (vertex& bridge : bridges)
+            for (const pair<int,int>& bridge : bridges)
             {
-                cout << bridge.get_value() << " ";
+                cout << bridge.first << " " << bridge.second;
             }
 		}
 		delete(input_graph);

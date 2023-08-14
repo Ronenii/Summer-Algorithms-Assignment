@@ -18,6 +18,6 @@ public:
     void mark_edge(vertex& i_current_vertex, vertex& i_neighbor_vertex) override;
     graph* get_dummy_graph() override;
     bool is_connected() override;
-    vector<vertex> find_bridges() override;
-    graph* get_directed_graph() override { return this;}
+    vector<pair<int, int>> find_bridges() override;
+    directed_graph* get_directed_graph() override { return this;}
 };

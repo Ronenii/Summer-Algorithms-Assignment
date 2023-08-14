@@ -46,19 +46,21 @@ bool non_directed_graph::is_connected()
 }
 
 // A dfs visit with a modification that directs the edges according to the dfs run direction. Sets the directed edge in 'i_directed_graph'
+// We run with DFS on the non directed graph and modify the given directed graph.
 void non_directed_graph::visit_and_direct(vertex & i_vertex, graph & i_directed_graph)
 {
-	list<vertex>& neighbors = i_vertex.get_neighbors();
+	const list<vertex>& neighbors = i_vertex.get_neighbors();
 
 	if(i_vertex.get_color() == Color::WHITE)
 	{
 		i_vertex.set_color(Color::GRAY);
-		for (vertex& v : neighbors)
+		for (const vertex& v : neighbors)
 		{
-			if (v.get_color() == Color::WHITE)
+            vertex& real_neighbor = m_vertexes[v.get_value() - 1];
+			if (real_neighbor.get_color() == Color::WHITE)
 			{
-                i_directed_graph.set_edge(i_vertex.get_value(), v.get_value());
-				visit_and_direct(v, i_directed_graph);
+                i_directed_graph.set_edge(i_vertex.get_value(), real_neighbor.get_value());
+				visit_and_direct(real_neighbor, i_directed_graph);
 			}
 		}
 		i_vertex.set_color(Color::BLACK);
@@ -66,37 +68,17 @@ void non_directed_graph::visit_and_direct(vertex & i_vertex, graph & i_directed_
 }
 
 
-vector<vertex> non_directed_graph::find_bridges()
+vector<pair<int, int>> non_directed_graph::find_bridges()
 {
     // The idea is to run DFS, the transpose the graph and run DFS again while keeping track of the parents' vertex.
     // If the parent vertex is not the same as the vertex we started from, then we have a bridge.
 
-    vector<vertex> bridges;
+    vector<pair<int, int>> bridges;
 
-    // We will use the DFS algorithm to find bridges.
-    for (auto vertex : m_vertexes) {
-        if (vertex.get_color() == Color::WHITE) {
-            visit(vertex);
-        }
-    }
+    graph* dg = get_directed_graph();
 
-    vector<vertex> transposedGraph = transpose(m_vertexes);
+    graph * dgt = dynamic_cast<directed_graph*>(dg)->get_transposed();
 
-    // We will use the DFS algorithm to find bridges.
-    for (auto vertex : transposedGraph) {
-        if (vertex.get_color() == Color::WHITE) {
-            visit(vertex);
-        }
-    }
-
-    // TODO : Check if the parent is not the same as the vertex we started from.
-    for (auto& vertex : m_vertexes) {
-        for(auto& neighbor : vertex.get_neighbors()) {
-            if (neighbor.get_rep() != vertex.get_value()) {
-                bridges.push_back(vertex);
-            }
-        }
-    }
     return bridges;
 }
 
@@ -139,12 +121,14 @@ vector<vertex> non_directed_graph::transpose(vector<vertex> &i_vertexes) {
     return transposedGraph;
 }
 
-graph *non_directed_graph::get_directed_graph() {
-    graph* directed = new directed_graph(m_num_of_vertexes, m_num_of_edges);
+// Returns a directed graph from this non directed graph using a DFS run.
+directed_graph *non_directed_graph::get_directed_graph() {
+    directed_graph* directed = new directed_graph(m_num_of_vertexes, m_num_of_edges);
     visit_and_direct(m_vertexes[0], *directed);
     return directed;
 }
 
+// 
 void non_directed_graph::set_edge(int i_src, int i_dst) {
     set_edge(m_vertexes[i_src], m_vertexes[i_dst]);
 }
