@@ -30,8 +30,9 @@ bool graph::is_all_black()
 }
 
 // The visit method as described in the book
-// We make a copy of the of the given vertex neighbors and travel along this "dummy graph" of the neighbors.
+// We make a copy of the given vertex neighbors and travel along this "dummy graph" of the neighbors.
 // None the changes we make (like deleting a neighbor in mark_edge) take place on the real graph.
+// This also directs the graph edges according to the dfs run direction.
 void graph::visit(vertex& i_vertex)
 {
 	list<vertex> neighbors = i_vertex.get_neighbors();
@@ -53,7 +54,7 @@ void graph::visit(vertex& i_vertex)
 
         // mark the parent of the neighbor
         // This is for the purpose of finding the SCC later
-        real_neighbor.set_parent(i_vertex);
+        real_neighbor.set_rep(i_vertex);
 
 		visit(real_neighbor);
 	}

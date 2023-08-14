@@ -1,15 +1,13 @@
 #include "NonDirectedGraph.h"
 
-void non_directed_graph::set_edge(vertex& i_src, vertex& i_dst, bool flag)
+void non_directed_graph::set_edge(vertex& i_src, vertex& i_dst)
 {
 	i_src.add_neighbor(i_dst);
 	i_src.set_degree(i_src.get_degree() + 1);
 
-    // flag = true means its not directed graph
-    if(flag) {
-        i_dst.add_neighbor(i_src);
-        i_dst.set_degree(i_dst.get_degree() + 1);
-    }
+    i_dst.add_neighbor(i_src);
+    i_dst.set_degree(i_dst.get_degree() + 1);
+
 
 }
 
@@ -51,7 +49,7 @@ bool non_directed_graph::is_connected()
 void non_directed_graph::visit_and_direct(vertex & i_vertex, graph & i_directed_graph)
 {
 	list<vertex>& neighbors = i_vertex.get_neighbors();
-    graph* directed = new non_directed_graph(i_directed_graph.get_num_of_vertexes(), i_directed_graph.get_num_of_edges());
+
 	if(i_vertex.get_color() == Color::WHITE)
 	{
 		i_vertex.set_color(Color::GRAY);
@@ -59,7 +57,7 @@ void non_directed_graph::visit_and_direct(vertex & i_vertex, graph & i_directed_
 		{
 			if (v.get_color() == Color::WHITE)
 			{
-                i_directed_graph.set_edge(i_vertex, v, false);
+                i_directed_graph.set_edge(i_vertex.get_value(), v.get_value());
 				visit_and_direct(v, i_directed_graph);
 			}
 		}
@@ -70,7 +68,7 @@ void non_directed_graph::visit_and_direct(vertex & i_vertex, graph & i_directed_
 
 vector<vertex> non_directed_graph::find_bridges()
 {
-    // The idea is to run DFS, the transpose the graph and run DFS again while keeping track of the parents vertex.
+    // The idea is to run DFS, the transpose the graph and run DFS again while keeping track of the parents' vertex.
     // If the parent vertex is not the same as the vertex we started from, then we have a bridge.
 
     vector<vertex> bridges;
@@ -92,14 +90,14 @@ vector<vertex> non_directed_graph::find_bridges()
     }
 
     // TODO : Check if the parent is not the same as the vertex we started from.
-    for (auto vertex : m_vertexes) {
+    for (auto& vertex : m_vertexes) {
         for(auto& neighbor : vertex.get_neighbors()) {
-            if (neighbor.get_parent() != vertex.get_value()) {
+            if (neighbor.get_rep() != vertex.get_value()) {
                 bridges.push_back(vertex);
             }
         }
     }
-
+    return bridges;
 }
 
 void non_directed_graph::stronglyConnectedComponents() {
@@ -139,4 +137,14 @@ vector<vertex> non_directed_graph::transpose(vector<vertex> &i_vertexes) {
     }
 
     return transposedGraph;
+}
+
+graph *non_directed_graph::get_directed_graph() {
+    graph* directed = new directed_graph(m_num_of_vertexes, m_num_of_edges);
+    visit_and_direct(m_vertexes[0], *directed);
+    return directed;
+}
+
+void non_directed_graph::set_edge(int i_src, int i_dst) {
+    set_edge(m_vertexes[i_src], m_vertexes[i_dst]);
 }

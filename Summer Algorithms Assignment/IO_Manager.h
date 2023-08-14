@@ -1,5 +1,6 @@
 #pragma once
 #include "NonDirectedGraph.h"
+#include "DirectedGraph.h"
 #include "Exceptions.h"
 
 //Responsible for handling IO from the user and the program.

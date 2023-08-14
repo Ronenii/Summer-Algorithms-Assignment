@@ -12,7 +12,7 @@ void vertex::add_neighbor(vertex & i_neighbor)
 // Checks if the given neighbor is already a neighbor of this vertex
 bool vertex::neighbor_exists(const vertex& i_neighbor) const
 {
-	for (auto& neighbor : m_neighbors)
+	for(auto& neighbor : m_neighbors)
 	{
 		if (i_neighbor.m_value == neighbor.m_value)
 		{
@@ -29,8 +29,8 @@ bool vertex::has_neighbors()
 	return !m_neighbors.empty();
 }
 
-void vertex::set_parent(vertex &vertex) {
-    m_parent = vertex.m_value;
+void vertex::set_rep(vertex &vertex) {
+    m_rep = vertex.m_value;
 }
 
 ////Returns the vertex @ the given index.

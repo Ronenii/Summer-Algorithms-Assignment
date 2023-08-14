@@ -4,30 +4,23 @@
 // The program will determine which vertexes are bridges.
 void io_manager::run_program()
 {
-	list<vertex> euler_circuit;
 	graph* input_graph;
 	input_graph = get_user_input();
 	if (input_graph != nullptr)
 	{
 		int complete_edges_counter = 0;
 		get_graph_input(input_graph, complete_edges_counter);
+
+        graph* directed_graph = input_graph->get_directed_graph();
+
 		if (complete_edges_counter == input_graph->get_num_of_edges())
 		{
-            // If the graph is connected, we will find the bridges.
-            graph* dummy_graph = input_graph->get_dummy_graph();
-            if (input_graph->is_connected())
+            input_graph->set_all_white();
+            vector<vertex> bridges = input_graph->find_bridges();
+            cout << "\nThe bridges are: ";
+            for (vertex& bridge : bridges)
             {
-                input_graph->set_all_white();
-                vector<vertex> bridges = input_graph->find_bridges();
-                cout << "\nThe bridges are: ";
-                for (vertex& bridge : bridges)
-                {
-                    cout << bridge.get_value() << " ";
-                }
-            }
-            else
-            {
-                cout << "The graph is not connected, therefore it has no bridges." << endl;
+                cout << bridge.get_value() << " ";
             }
 		}
 		delete(input_graph);
@@ -80,7 +73,7 @@ void io_manager::get_graph_input(graph* i_graph, int& o_completed_edges)
 		try
 		{
 			get_edge_input(v1, v2, i_graph->get_num_of_vertexes());
-			i_graph->set_edge(i_graph->get_vertex_by_value(v1), i_graph->get_vertex_by_value(v2), true);
+			i_graph->set_edge(i_graph->get_vertex_by_value(v1), i_graph->get_vertex_by_value(v2));
 			o_completed_edges++;
 		}
 		catch (const invalid_input_exception& e)
