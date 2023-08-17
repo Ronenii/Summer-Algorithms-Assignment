@@ -17,10 +17,10 @@ void io_manager::run_program()
 			const vector<pair<int, int>> bridges = input_graph->find_bridges();
 
            
-            cout << "\nThe bridges are: ";
+            cout << "\nThe bridges are: \n";
             for (const pair<int,int>& bridge : bridges)
             {
-                cout << bridge.first << " " << bridge.second;
+                cout << bridge.first << " " << bridge.second<< "\n";
             }
 		}
 		delete(input_graph);
