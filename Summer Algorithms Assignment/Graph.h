@@ -32,4 +32,6 @@ public:
 	virtual bool is_connected() = 0;
 	virtual graph* get_dummy_graph() = 0;
 	virtual vector<pair<int, int>> find_bridges() = 0;
+	virtual vertex& get_real_nighbor(vertex& i_src) = 0;
+
 };

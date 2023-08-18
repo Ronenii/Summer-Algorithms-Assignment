@@ -16,7 +16,7 @@ private:
     int m_rep = -1;
 	list<vertex> m_neighbors; // change to by value.
 public:
-	vertex(int i_value = 0) { m_value = i_value; }
+	vertex(int i_value = 0) { m_value = i_value;}
 	~vertex() = default;
 	void add_neighbor(vertex& i_neighbor);
 	bool neighbor_exists(const vertex& i_neighbor) const;

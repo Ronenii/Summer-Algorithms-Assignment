@@ -38,10 +38,6 @@ bool non_directed_graph::is_connected()
     set_all_white();
     visit(m_vertexes[0]);
 
-    //make empty graph
-//    graph* directed = get_dummy_graph();
-//    visit_and_direct(m_vertexes[0], *directed);
-
     return is_all_black();
 }
 
@@ -49,23 +45,38 @@ bool non_directed_graph::is_connected()
 // We run with DFS on the non directed graph and modify the given directed graph.
 //
 // TODO: Add parent field and adjust set edge to always set an edge between vertices unless its an edge to a prev.
-void non_directed_graph::visit_and_direct(vertex& i_vertex, graph& i_directed_graph, list<vertex>& ending_list)
+void non_directed_graph::visit_and_direct(vertex& i_vertex, graph& i_directed_graph, list<vertex>& ending_list, int parent)
 {
     const list<vertex>& neighbors = i_vertex.get_neighbors();
 
     if (i_vertex.get_color() == Color::WHITE)
     {
         i_vertex.set_color(Color::GRAY);
+
+        // make the vertex gray in the directed graph
+        vertex& in_directed_graph = i_directed_graph.get_real_nighbor(i_vertex);
+        in_directed_graph.set_color(Color::GRAY);
+
         for (const vertex& v : neighbors)
         {
             vertex& real_neighbor = m_vertexes[v.get_value() - 1];
-            if (real_neighbor.get_color() == Color::WHITE)
-            {
+
+             if (real_neighbor.get_color() == Color::WHITE)
+             {
                 i_directed_graph.set_edge(i_vertex.get_value(), real_neighbor.get_value());
-                visit_and_direct(real_neighbor, i_directed_graph, ending_list);
-            }
+                visit_and_direct(real_neighbor, i_directed_graph, ending_list, i_vertex.get_value());
+             }
+            // TODO: need to think of another way that will not add an edge to a prev.
+             else if(real_neighbor.get_value() != parent){
+                    i_directed_graph.set_edge(i_vertex.get_value(), real_neighbor.get_value());
+             }
+
         }
         i_vertex.set_color(Color::BLACK);
+
+        // make the vertex black in the directed graph
+        in_directed_graph.set_color(Color::BLACK);
+
         ending_list.push_back(i_vertex);
     }
 }
@@ -114,6 +125,8 @@ void non_directed_graph::DFS_on_transposed_with_ending_list(directed_graph* tran
     while (!ending_list.empty())
     {
         int entry_vertex_value = ending_list.back().get_value();
+//        vertex& entry_vertex = m_vertexes[entry_vertex_value - 1];
+//        vertex& real_entry_vertex = transposed_graph->get_vertex_by_value(entry_vertex_value);
         visit_and_mark_rep(transposed_graph->get_vertex_by_value(entry_vertex_value), entry_vertex_value);
         ending_list.pop_back();
     }
@@ -123,11 +136,15 @@ void non_directed_graph::DFS_on_transposed_with_ending_list(directed_graph* tran
 void non_directed_graph::visit_and_mark_rep(vertex& i_vertex, const int rep)
 {
     i_vertex.set_rep(rep);
+    vertex& in = get_real_nighbor(i_vertex);
+    in.set_rep(rep);
     const list<vertex>& neighbors = i_vertex.get_neighbors();
 
     if (i_vertex.get_color() == Color::WHITE)
     {
         i_vertex.set_color(Color::GRAY);
+
+        in.set_color(Color::GRAY);
         for (const vertex& v : neighbors)
         {
             vertex& real_neighbor = m_vertexes[v.get_value() - 1];
@@ -141,46 +158,6 @@ void non_directed_graph::visit_and_mark_rep(vertex& i_vertex, const int rep)
 }
 
 
-
-void non_directed_graph::stronglyConnectedComponents() {
-
-    vector<vertex> transposedGraph = transpose(m_vertexes);
-
-    // We will use the DFS algorithm to find strongly connected components.
-    // We will start from the first vertex in the graph.
-
-    for (auto vertex : m_vertexes) {
-        if (vertex.get_color() == Color::WHITE) {
-            visit(vertex);
-        }
-    }
-
-    cout << "Hello " << endl;
-
-}
-
-vector<vertex> non_directed_graph::transpose(vector<vertex>& i_vertexes) {
-
-    int numVertices = i_vertexes.size();
-    vector<vertex> transposedGraph(numVertices);
-
-
-    for (int i = 0; i < numVertices; i++) {
-        transposedGraph[i].set_value(i_vertexes[i].get_value());
-    }
-
-    for (int i = 0; i < numVertices; i++) {
-        vertex v = i_vertexes[i];
-        list<vertex> neighbors = v.get_neighbors();
-        for (const auto& neighbor : neighbors) {
-            transposedGraph[neighbor.get_value() - 1].add_neighbor(v);
-            cout << "Adding neighbor " << v.get_value() << " to " << neighbor.get_value() << endl;
-        }
-    }
-
-    return transposedGraph;
-}
-
 // Returns a directed graph from this non directed graph using a DFS run.
 directed_graph* non_directed_graph::get_directed_graph(list<vertex>& ending_list) {
     set_all_white();
@@ -189,7 +166,8 @@ directed_graph* non_directed_graph::get_directed_graph(list<vertex>& ending_list
 
     for (vertex & v : my_vertexes)
     {
-        visit_and_direct(v, *directed, ending_list);
+        vertex& real_vertex = m_vertexes[v.get_value() - 1];
+        visit_and_direct(real_vertex, *directed, ending_list, -1);
     }
 
     return directed;
@@ -199,3 +177,99 @@ directed_graph* non_directed_graph::get_directed_graph(list<vertex>& ending_list
 void non_directed_graph::set_edge(int i_src, int i_dst) {
     set_edge(m_vertexes[i_src], m_vertexes[i_dst]);
 }
+
+//bool dfs(int curr, int des, vector<vector<int> >& adj,
+//         vector<int>& vis)
+//{
+//
+//    // If curr node is destination return true
+//    if (curr == des) {
+//        return true;
+//    }
+//    vis[curr] = 1;
+//    for (auto x : adj[curr]) {
+//        if (!vis[x]) {
+//            if (dfs(x, des, adj, vis)) {
+//                return true;
+//            }
+//        }
+//    }
+//    return false;
+//}
+//
+//bool isPath(int src, int des, vector<vector<int> >& adj)
+//{
+//    vector<int> vis(adj.size() + 1, 0);
+//    return dfs(src, des, adj, vis);
+//}
+//
+//vector<vector<int>> non_directed_graph::stronglyConnectedComponents() {
+//
+//    // Stores all the strongly connected components.
+//    vector<vector<int> > ans;
+//
+//    // Stores whether a vertex is a part of any Strongly
+//    // Connected Component
+//    vector<int> is_scc(n + 1, 0);
+//
+//    vector<vector<int> > adj(n + 1);
+//
+//    for (int i = 0; i < a.size(); i++) {
+//        adj[a[i][0]].push_back(a[i][1]);
+//    }
+//
+//    // Traversing all the vertices
+//    for (int i = 1; i <= n; i++) {
+//
+//        if (!is_scc[i]) {
+//
+//            // If a vertex i is not a part of any SCC
+//            // insert it into a new SCC list and check
+//            // for other vertices whether they can be
+//            // thr part of thidl ist.
+//            vector<int> scc;
+//            scc.push_back(i);
+//
+//            for (int j = i + 1; j <= n; j++) {
+//
+//                // If there is a path from vertex i to
+//                // vertex j and vice versa put vertex j
+//                // into the current SCC list.
+//                if (!is_scc[j] && isPath(i, j, adj)
+//                    && isPath(j, i, adj)) {
+//                    is_scc[j] = 1;
+//                    scc.push_back(j);
+//                }
+//            }
+//
+//            // Insert the SCC containing vertex i into
+//            // the final list.
+//            ans.push_back(scc);
+//        }
+//    }
+//    return ans;
+//
+//}
+
+//vector<vertex> non_directed_graph::transpose(vector<vertex>& i_vertexes) {
+//
+//    int numVertices = i_vertexes.size();
+//    vector<vertex> transposedGraph(numVertices);
+//
+//
+//    for (int i = 0; i < numVertices; i++) {
+//        transposedGraph[i].set_value(i_vertexes[i].get_value());
+//    }
+//
+//    for (int i = 0; i < numVertices; i++) {
+//        vertex v = i_vertexes[i];
+//        list<vertex> neighbors = v.get_neighbors();
+//        for (const auto& neighbor : neighbors) {
+//            transposedGraph[neighbor.get_value() - 1].add_neighbor(v);
+//            cout << "Adding neighbor " << v.get_value() << " to " << neighbor.get_value() << endl;
+//        }
+//    }
+//
+//    return transposedGraph;
+//}
+

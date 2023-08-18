@@ -2,6 +2,15 @@
 
 void directed_graph::set_edge(vertex& i_src, vertex& i_dst)
 {
+    if (i_dst.get_parent() == -1) { // if the dst vertex has no parent meaning it's the first time we see it
+        i_dst.set_parent(i_src.get_value());
+    }
+
+//    if(i_dst.get_rep() == i_dst.get_value()){ // if the dst vertex has no rep meaning it's the first time we see it
+//        i_dst.set_rep(i_src.get_rep());
+//    }
+
+
 
     i_src.add_neighbor(i_dst);
     i_src.set_out_degree(i_src.get_out_degree() + 1);
