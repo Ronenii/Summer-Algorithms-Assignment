@@ -128,15 +128,8 @@ void non_directed_graph::DFS_on_transposed_with_ending_list(directed_graph* tran
     this->set_all_white();
     while (!ending_list.empty())
     {
-        vertex& entry_vertex = ending_list.back();
         int entry_vertex_value = ending_list.back().get_value();
-//        vertex& entry_vertex = m_vertexes[entry_vertex_value - 1];
         vertex& real_entry_vertex = this->m_vertexes[entry_vertex_value - 1];
-
-
-        if(entry_vertex_value == 3){
-            cout << "here" << endl;
-        }
 
         if(real_entry_vertex.get_color() == Color::BLACK){
             transposed_graph->get_vertex_by_value(entry_vertex_value) = real_entry_vertex;
