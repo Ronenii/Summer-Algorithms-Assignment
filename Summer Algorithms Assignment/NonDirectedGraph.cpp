@@ -43,8 +43,7 @@ bool non_directed_graph::is_connected()
 
 // A dfs visit with a modification that directs the edges according to the dfs run direction. Sets the directed edge in 'i_directed_graph'
 // We run with DFS on the non directed graph and modify the given directed graph.
-//
-// TODO: Add parent field and adjust set edge to always set an edge between vertices unless its an edge to a prev.
+// We also keep an ending list of the vertices in the order they were visited.
 void non_directed_graph::visit_and_direct(vertex& i_vertex, graph& i_directed_graph, list<vertex>& ending_list, int parent)
 {
     const list<vertex>& neighbors = i_vertex.get_neighbors();
@@ -66,8 +65,7 @@ void non_directed_graph::visit_and_direct(vertex& i_vertex, graph& i_directed_gr
                 i_directed_graph.set_edge(i_vertex.get_value(), real_neighbor.get_value());
                 visit_and_direct(real_neighbor, i_directed_graph, ending_list, i_vertex.get_value());
              }
-            // TODO: need to think of another way that will not add an edge to a prev.
-             else if(real_neighbor.get_value() != parent){
+             else if(real_neighbor.get_value() != parent && real_neighbor.get_color() == Color::GRAY){
                     i_directed_graph.set_edge(i_vertex.get_value(), real_neighbor.get_value());
              }
 
