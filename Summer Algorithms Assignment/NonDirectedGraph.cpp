@@ -70,12 +70,16 @@ void non_directed_graph::visit_and_direct(vertex& i_vertex, graph& i_directed_gr
              }
 
         }
+
         i_vertex.set_color(Color::BLACK);
 
         // make the vertex black in the directed graph
         in_directed_graph.set_color(Color::BLACK);
 
+        // add the vertex to the ending list as neutral
+        i_vertex.set_color(Color::WHITE);
         ending_list.push_back(i_vertex);
+        i_vertex.set_color(Color::BLACK);
     }
 }
 
@@ -89,8 +93,10 @@ vector<pair<int, int>> non_directed_graph::find_bridges()
     list<vertex> ending_list;
 
     graph* dg = get_directed_graph(ending_list);
+    dg->set_all_white();
 
     directed_graph* dgt = dynamic_cast<directed_graph*>(dg)->get_transposed();
+    dgt->set_all_white();
 
     DFS_on_transposed_with_ending_list(dgt, ending_list);
 
@@ -122,9 +128,22 @@ void non_directed_graph::DFS_on_transposed_with_ending_list(directed_graph* tran
     this->set_all_white();
     while (!ending_list.empty())
     {
+        vertex& entry_vertex = ending_list.back();
         int entry_vertex_value = ending_list.back().get_value();
 //        vertex& entry_vertex = m_vertexes[entry_vertex_value - 1];
-//        vertex& real_entry_vertex = transposed_graph->get_vertex_by_value(entry_vertex_value);
+        vertex& real_entry_vertex = this->m_vertexes[entry_vertex_value - 1];
+
+
+        if(entry_vertex_value == 3){
+            cout << "here" << endl;
+        }
+
+        if(real_entry_vertex.get_color() == Color::BLACK){
+            transposed_graph->get_vertex_by_value(entry_vertex_value) = real_entry_vertex;
+            ending_list.pop_back();
+            continue;
+        }
+
         visit_and_mark_rep(transposed_graph->get_vertex_by_value(entry_vertex_value), entry_vertex_value);
         ending_list.pop_back();
     }
@@ -133,16 +152,21 @@ void non_directed_graph::DFS_on_transposed_with_ending_list(directed_graph* tran
 // A DFS visit with a modification that marks each vertex with a representative.
 void non_directed_graph::visit_and_mark_rep(vertex& i_vertex, const int rep)
 {
-    i_vertex.set_rep(rep);
-    vertex& in = get_real_nighbor(i_vertex);
-    in.set_rep(rep);
+    vertex &in = get_real_nighbor(i_vertex);
+
+    // if the vertex has no rep, set it to be the rep. This means it's the first time we see it.
+    if( in.get_rep() == -1) {
+        i_vertex.set_rep(rep);
+        in.set_rep(rep);
+    }
+
     const list<vertex>& neighbors = i_vertex.get_neighbors();
 
-    if (i_vertex.get_color() == Color::WHITE)
+    if (in.get_color() == Color::WHITE)
     {
         i_vertex.set_color(Color::GRAY);
-
         in.set_color(Color::GRAY);
+
         for (const vertex& v : neighbors)
         {
             vertex& real_neighbor = m_vertexes[v.get_value() - 1];
@@ -152,6 +176,7 @@ void non_directed_graph::visit_and_mark_rep(vertex& i_vertex, const int rep)
             }
         }
         i_vertex.set_color(Color::BLACK);
+        in.set_color(Color::BLACK);
     }
 }
 
