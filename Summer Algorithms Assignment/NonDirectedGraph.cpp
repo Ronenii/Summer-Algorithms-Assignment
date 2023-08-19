@@ -132,7 +132,11 @@ void non_directed_graph::DFS_on_transposed_with_ending_list(directed_graph* tran
         vertex& real_entry_vertex = this->m_vertexes[entry_vertex_value - 1];
 
         if(real_entry_vertex.get_color() == Color::BLACK){
+
+            // This means we have already been to this vetex and marked it with a representative.
+            // So we just need to update the vetex in the transposed graph.
             transposed_graph->get_vertex_by_value(entry_vertex_value) = real_entry_vertex;
+
             ending_list.pop_back();
             continue;
         }
