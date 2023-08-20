@@ -44,11 +44,6 @@ void graph::visit(vertex& i_vertex)
             continue;
         }
 
-		if(real_neighbor.get_value() == 4){
-			cout << "debug";
-		}
-        cout<< "Visiting vertex " + to_string(real_neighbor.get_value()) + " ";
-
         // We want to make the graph directed, so we delete the edge from the neighbor to the current vertex
         real_neighbor.get_neighbors().remove(i_vertex);
 

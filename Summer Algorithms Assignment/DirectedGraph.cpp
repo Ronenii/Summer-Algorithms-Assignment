@@ -6,12 +6,6 @@ void directed_graph::set_edge(vertex& i_src, vertex& i_dst)
         i_dst.set_parent(i_src.get_value());
     }
 
-//    if(i_dst.get_rep() == i_dst.get_value()){ // if the dst vertex has no rep meaning it's the first time we see it
-//        i_dst.set_rep(i_src.get_rep());
-//    }
-
-
-
     i_src.add_neighbor(i_dst);
     i_src.set_out_degree(i_src.get_out_degree() + 1);
     i_dst.set_in_degree(i_dst.get_in_degree() + 1);
@@ -93,7 +87,7 @@ vector<pair<int, int>> directed_graph::find_bridges() {
 
 bool directed_graph::is_connected()
 {
-    cout << "is_connected() is not implemented for directed graph" << endl;
+    cout << "is_connected() is not implemented for directed graph.Only is_strongly_connected()" << endl;
     return false;
 }
 

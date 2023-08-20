@@ -11,17 +11,24 @@ void io_manager::run_program()
 		int complete_edges_counter = 0;
 		get_graph_input(input_graph, complete_edges_counter);
 
-
 		if (complete_edges_counter == input_graph->get_num_of_edges())
 		{
 			const vector<pair<int, int>> bridges = input_graph->find_bridges();
 
-           
-            cout << "\nThe bridges are: \n";
-            for (const pair<int,int>& bridge : bridges)
-            {
-                cout << bridge.first << " " << bridge.second<< "\n";
-            }
+			if(input_graph->is_connected() == 0)
+			{
+				cout << "\nGraph is not connected\n";
+				return;
+			}
+           	else if(bridges.empty()) {
+				cout << "\nNo bridges in graph\n";
+			}
+			else {
+				cout << "\nThe bridges are: \n";
+				for (const pair<int, int> &bridge: bridges) {
+					cout << bridge.first << " " << bridge.second << "\n";
+				}
+			}
 		}
 		delete(input_graph);
 	}
