@@ -41,20 +41,21 @@ bool non_directed_graph::is_connected()
     return is_all_black();
 }
 
+bool non_directed_graph::edge_exists(int i_src, int i_dst)
+{
+    return get_vertex_by_value(i_src).neighbor_exists(get_vertex_by_value(i_dst));
+}
+
 // A dfs visit with a modification that directs the edges according to the dfs run direction. Sets the directed edge in 'i_directed_graph'
 // We run with DFS on the non directed graph and modify the given directed graph.
 // We also keep an ending list of the vertices in the order they were visited.
-void non_directed_graph::visit_and_direct(vertex& i_vertex, graph& i_directed_graph, list<vertex>& ending_list, int parent)
+void non_directed_graph::visit_and_direct(vertex& i_vertex, graph& i_directed_graph, list<vertex>& ending_list, const int parent)
 {
     const list<vertex>& neighbors = i_vertex.get_neighbors();
 
     if (i_vertex.get_color() == Color::WHITE)
     {
         i_vertex.set_color(Color::GRAY);
-
-        // make the vertex gray in the directed graph
-        vertex& in_directed_graph = i_directed_graph.get_real_nighbor(i_vertex);
-        in_directed_graph.set_color(Color::GRAY);
 
         for (const vertex& v : neighbors)
         {
@@ -65,19 +66,13 @@ void non_directed_graph::visit_and_direct(vertex& i_vertex, graph& i_directed_gr
                 i_directed_graph.set_edge(i_vertex.get_value(), real_neighbor.get_value());
                 visit_and_direct(real_neighbor, i_directed_graph, ending_list, i_vertex.get_value());
              }
-             else if(real_neighbor.get_value() != parent && real_neighbor.get_color() == Color::GRAY){
+             else if(real_neighbor.get_value() != parent && !i_directed_graph.edge_exists(real_neighbor.get_value(), i_vertex.get_value())){
                     i_directed_graph.set_edge(i_vertex.get_value(), real_neighbor.get_value());
              }
 
         }
 
-        i_vertex.set_color(Color::BLACK);
-
-        // make the vertex black in the directed graph
-        in_directed_graph.set_color(Color::BLACK);
-
         // add the vertex to the ending list as neutral
-        i_vertex.set_color(Color::WHITE);
         ending_list.push_back(i_vertex);
         i_vertex.set_color(Color::BLACK);
     }
@@ -141,39 +136,8 @@ void non_directed_graph::DFS_on_transposed_with_ending_list(directed_graph* tran
             continue;
         }
 
-        visit_and_mark_rep(transposed_graph->get_vertex_by_value(entry_vertex_value), entry_vertex_value);
+        transposed_graph->visit_and_mark_rep(transposed_graph->get_vertex_by_value(entry_vertex_value), entry_vertex_value);
         ending_list.pop_back();
-    }
-}
-
-// A DFS visit with a modification that marks each vertex with a representative.
-void non_directed_graph::visit_and_mark_rep(vertex& i_vertex, const int rep)
-{
-    vertex &in = get_real_nighbor(i_vertex);
-
-    // if the vertex has no rep, set it to be the rep. This means it's the first time we see it.
-    if( in.get_rep() == -1) {
-        i_vertex.set_rep(rep);
-        in.set_rep(rep);
-    }
-
-    const list<vertex>& neighbors = i_vertex.get_neighbors();
-
-    if (in.get_color() == Color::WHITE)
-    {
-        i_vertex.set_color(Color::GRAY);
-        in.set_color(Color::GRAY);
-
-        for (const vertex& v : neighbors)
-        {
-            vertex& real_neighbor = m_vertexes[v.get_value() - 1];
-            if (real_neighbor.get_color() == Color::WHITE)
-            {
-                visit_and_mark_rep(real_neighbor, rep);
-            }
-        }
-        i_vertex.set_color(Color::BLACK);
-        in.set_color(Color::BLACK);
     }
 }
 
@@ -190,7 +154,19 @@ directed_graph* non_directed_graph::get_directed_graph(list<vertex>& ending_list
         visit_and_direct(real_vertex, *directed, ending_list, -1);
     }
 
+    // This is done because all edges are added as black to the ending list.
+    set_ending_list_white(ending_list);
+
+
     return directed;
+}
+
+void non_directed_graph::set_ending_list_white(list<vertex>& ending_list)
+{
+	for (vertex & v : ending_list)
+	{
+        v.set_color(Color::WHITE);
+	}
 }
 
 //

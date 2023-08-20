@@ -33,6 +33,7 @@ public:
 	void set_color(Color i_color) { m_color = i_color; }
 	Color get_color() const { return m_color; }
 	bool has_neighbors();
+	bool is_visited() const { return m_color == Color::BLACK || m_color == Color::WHITE; }
 //	static vertex& get_vertex_from_circuit(list<vertex*>& i_circuit, int i_index);
 //	static void paste_circuit(list<vertex*>& i_dst, list<vertex*>& i_src, int i_start_index);
 

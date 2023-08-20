@@ -11,8 +11,10 @@ public:
     ~directed_graph() = default;
     void set_edge(vertex& i_src, vertex& i_dst) override;
     void set_edge(int i_src, int i_dst) override;
-    bool is_grpah_strongly_connected();
+    bool edge_exists(int i_src, int i_dst) override;
+    bool is_graph_strongly_connected();
     directed_graph* get_transposed();
+    void visit_and_mark_rep(vertex& i_vertex, int rep);
     bool all_degrees_equal();
     list<vertex> &get_ending_list() { return ending_list; }
     void mark_edge(vertex& i_current_vertex, vertex& i_neighbor_vertex) override;
