@@ -18,29 +18,23 @@ private:
 public:
 	vertex(int i_value = 0) { m_value = i_value;}
 	~vertex() = default;
-	void add_neighbor(vertex& i_neighbor);
+	void add_neighbor(const vertex& i_neighbor);
 	bool neighbor_exists(const vertex& i_neighbor) const;
 	list<vertex>& get_neighbors() { return m_neighbors; }
 	int get_value()const { return m_value; }
-	void set_value(int i_value) { m_value = i_value; }
+	void set_value(const int i_value) { m_value = i_value; }
 	bool operator==(const vertex& i_other)const { return i_other.m_value == m_value; }
-	void set_degree(int i_degree) { m_degree = i_degree; }
-	int get_degree() const { return m_degree; }
-	int get_in_degree() const { return  m_in_degree; }
-	void set_in_degree(int i_in_degree) { m_in_degree = i_in_degree; }
-	int get_out_degree() const { return  m_out_degree; }
-	void set_out_degree(int i_out_degree) { m_out_degree = i_out_degree; }
-	void set_color(Color i_color) { m_color = i_color; }
+	void set_color(const Color i_color) { m_color = i_color; }
 	Color get_color() const { return m_color; }
-	bool has_neighbors();
+	bool has_neighbors() const;
 	bool is_visited() const { return m_color == Color::BLACK || m_color == Color::WHITE; }
 //	static vertex& get_vertex_from_circuit(list<vertex*>& i_circuit, int i_index);
 //	static void paste_circuit(list<vertex*>& i_dst, list<vertex*>& i_src, int i_start_index);
 
     int get_parent() const { return m_parent;}
-    void set_parent(int i_parent) { m_parent = i_parent; }
+    void set_parent(const int i_parent) { m_parent = i_parent; }
 
     void set_rep(vertex &vertex);
 	int get_rep() const { return m_rep;}
-	void set_rep(int i_parent) { m_rep = i_parent; }
+	void set_rep(const int i_parent) { m_rep = i_parent; }
 };

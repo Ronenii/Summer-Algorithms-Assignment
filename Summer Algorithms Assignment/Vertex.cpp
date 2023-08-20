@@ -1,7 +1,7 @@
 #include "Vertex.h"
 
 // Adds the given neighbor to the vertex's neighbor list.
-void vertex::add_neighbor(vertex & i_neighbor)
+void vertex::add_neighbor(const vertex & i_neighbor)
 {
 	if (!neighbor_exists(i_neighbor))
 	{
@@ -24,7 +24,7 @@ bool vertex::neighbor_exists(const vertex& i_neighbor) const
 }
 
 // Returns if the vertex has any neighbors.
-bool vertex::has_neighbors()
+bool vertex::has_neighbors() const
 {
 	return !m_neighbors.empty();
 }
@@ -32,19 +32,3 @@ bool vertex::has_neighbors()
 void vertex::set_rep(vertex &vertex) {
     m_rep = vertex.m_value;
 }
-
-////Returns the vertex @ the given index.
-//vertex& vertex::get_vertex_from_circuit(list<vertex*>& i_circuit, int i_index)
-//{
-//	auto it = i_circuit.begin();
-//	advance(it, i_index);
-//	return *(*it);
-//}
-//
-//// inserts the i_src list into the i_dst list from stating from the givern index. 
-//void vertex::paste_circuit(list<vertex*>& i_dst, list<vertex*>& i_src, int i_start_index)
-//{
-//	i_src.pop_front();
-//	auto pos = next(i_dst.begin(), i_start_index + 1);
-//	i_dst.insert(pos, i_src.begin(), i_src.end());
-//}
