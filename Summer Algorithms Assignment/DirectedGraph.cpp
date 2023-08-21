@@ -2,15 +2,18 @@
 
 void directed_graph::set_edge(vertex& i_src, vertex& i_dst)
 {
-    if (i_dst.get_parent() == -1) { // if the dst vertex has no parent meaning it's the first time we see it
+    // if the dst vertex has no parent meaning it's the first time we see it
+    if (i_dst.get_parent() == -1) {
         i_dst.set_parent(i_src.get_value());
     }
-
+    
+    // Adding the edge to the graph and updating the degrees.
     i_src.add_neighbor(i_dst);
     i_src.set_out_degree(i_src.get_out_degree() + 1);
     i_dst.set_in_degree(i_dst.get_in_degree() + 1);
 }
 
+// Not used in this assignment.
 bool directed_graph::is_graph_strongly_connected()
 {
     set_all_white();
@@ -37,13 +40,12 @@ bool directed_graph::is_graph_strongly_connected()
 void directed_graph::mark_edge(vertex& i_current_vertex, vertex& i_neighbor_vertex)
 {
     i_current_vertex.get_neighbors().remove(i_neighbor_vertex);
-
 }
 
 // Returns the transposed version of this directed graph.
 directed_graph* directed_graph::get_transposed()
 {
-    directed_graph* transposed = new directed_graph(m_num_of_vertexes, m_num_of_edges);
+    directed_graph* transposed = new directed_graph(m_num_of_vertices, m_num_of_edges);
     vertex src;
     vertex dst;
 
@@ -61,47 +63,47 @@ directed_graph* directed_graph::get_transposed()
 }
 
 // A DFS visit with a modification that marks each vertex with a representative.
-void directed_graph::visit_and_mark_rep(vertex& i_vertex, const int rep)
+void directed_graph::visit_and_mark_rep(vertex& i_vertex, const int i_rep)
 {
-    vertex &in = get_real_nighbor(i_vertex);
+    vertex& real_vertex = get_real_neighbor(i_vertex);
 
     // if the vertex has no rep, set it to be the rep. This means it's the first time we see it.
-    if( in.get_rep() == -1) {
-        i_vertex.set_rep(rep);
-        in.set_rep(rep);
+    if(real_vertex.get_rep() == -1) {
+        i_vertex.set_rep(i_rep);
+        real_vertex.set_rep(i_rep);
     }
 
     const list<vertex>& neighbors = i_vertex.get_neighbors();
 
-    if (in.get_color() == Color::WHITE)
+    if (real_vertex.get_color() == Color::WHITE)
     {
         i_vertex.set_color(Color::GRAY);
-        in.set_color(Color::GRAY);
+        real_vertex.set_color(Color::GRAY);
 
         for (const vertex& v : neighbors)
         {
             vertex& real_neighbor = m_vertexes[v.get_value() - 1];
             if (real_neighbor.get_color() == Color::WHITE)
             {
-                visit_and_mark_rep(real_neighbor, rep);
+                visit_and_mark_rep(real_neighbor, i_rep);
             }
         }
         i_vertex.set_color(Color::BLACK);
-        in.set_color(Color::BLACK);
+        real_vertex.set_color(Color::BLACK);
     }
 }
 
-bool directed_graph::all_degrees_equal()
-{
-    for(auto & v: m_vertexes)
-    {
-        if (v.get_in_degree() != v.get_out_degree())
-        {
-            return false;
-        }
-    }
+// Sets an edge by value.
+void directed_graph::set_edge(int i_src, int i_dst) {
+    vertex& src = get_vertex_by_value(i_src);
+    vertex& dst = get_vertex_by_value(i_dst);
+    set_edge(src, dst);
+}
 
-    return true;
+// Returns the real vertex by value.
+bool directed_graph::edge_exists(int i_src, int i_dst)
+{
+    return get_vertex_by_value(i_src).neighbor_exists(get_vertex_by_value(i_dst));
 }
 
 graph* directed_graph::get_dummy_graph()
@@ -120,15 +122,4 @@ bool directed_graph::is_connected()
 {
     cout << "is_connected() is not implemented for directed graph.Only is_strongly_connected()" << endl;
     return false;
-}
-
-void directed_graph::set_edge(int i_src, int i_dst) {
-    vertex& src = get_vertex_by_value(i_src);
-    vertex& dst = get_vertex_by_value(i_dst);
-    set_edge(src, dst);
-}
-
-bool directed_graph::edge_exists(int i_src, int i_dst)
-{
-    return get_vertex_by_value(i_src).neighbor_exists(get_vertex_by_value(i_dst));
 }
