@@ -8,31 +8,36 @@ void io_manager::run_program()
 	input_graph = get_user_input();
 	if (input_graph != nullptr)
 	{
-		int complete_edges_counter = 0;
-		get_graph_input(input_graph, complete_edges_counter);
-
-		if (complete_edges_counter == input_graph->get_num_of_edges())
+		try
 		{
-			const vector<pair<int, int>> bridges = input_graph->find_bridges();
-            
-            // If the graph is not connected, we can't find bridges.
-			if(input_graph->is_connected() == 0)
+			int complete_edges_counter = 0;
+			const vector<pair<int, int>> edges = get_graph_input(input_graph, complete_edges_counter);
+			if (complete_edges_counter == input_graph->get_num_of_edges())
 			{
-				cout << "\nGraph is not connected\n";
-				return;
-			}
-            // If the graph is connected and there are no bridges.
-           	else if(bridges.empty()) {
-				cout << "\nNo bridges in graph\n";
-			}
-			else {
-				cout << "\nThe bridges are: \n";
-				for (const pair<int, int> &bridge: bridges) {
-					cout << bridge.first << " " << bridge.second << "\n";
+				const vector<pair<int, int>> bridges = input_graph->find_bridges(edges);
+
+				if (input_graph->is_connected() == 0)
+				{
+					cout << "\nGraph is not connected\n";
+					return;
+				}
+
+				if (bridges.empty()) {
+					cout << "\nNo bridges in graph\n";
+				}
+
+				else {
+					cout << "\nThe bridges are: \n";
+					for (const pair<int, int>& bridge : bridges) {
+						cout << bridge.first << " " << bridge.second << "\n";
+					}
 				}
 			}
+			delete(input_graph);
+		}catch (invalid_input_exception& e)
+		{
+			cout << e.what() << endl;
 		}
-		delete(input_graph);
 	}
 }
 
@@ -57,7 +62,7 @@ graph* io_manager::get_user_input()
 }
 
 // User input and edge he wants to create and the method validates it.
-void io_manager::get_edge_input(int& o_src, int& o_dst, int i_num_of_vertexes)
+void io_manager::get_edge_input(int& o_src, int& o_dst, const int i_num_of_vertexes)
 {
 	cin >> o_src >> o_dst;
 	if (!(o_src > 0 && o_src <= i_num_of_vertexes) || !(o_dst > 0 && o_dst <= i_num_of_vertexes))
@@ -73,23 +78,26 @@ void io_manager::get_vertexes_and_edges_input(int& o_vertexes, int& o_edges)
 }
 
 // User inputs the edges he wants to create and the method validates it. User can only create the number of edges he has requested.
-void io_manager::get_graph_input(graph* i_graph, int& o_completed_edges)
+vector<pair<int, int>>& io_manager::get_graph_input(graph* i_graph, int& o_completed_edges)
 {
 	int v1, v2;
+	vector<pair<int, int>>* ret = new vector<pair<int,int>>();
 
 	for (int i = 0; i < i_graph->get_num_of_edges(); i++)
 	{
 		try
 		{
 			get_edge_input(v1, v2, i_graph->get_num_of_vertexes());
-			i_graph->set_edge(i_graph->get_vertex_by_value(v1), i_graph->get_vertex_by_value(v2));
+			i_graph->set_edge(i_graph->get_vertex_by_id(v1), i_graph->get_vertex_by_id(v2));
+			ret->emplace_back(v1, v2);
 			o_completed_edges++;
 		}
 		catch (const invalid_input_exception& e)
 		{
-			cout << e.what() << endl;
-			return;
+			delete ret;
+			throw e;
 		}
 	}
+	return *ret;
 }
 
