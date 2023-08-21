@@ -9,13 +9,13 @@ class graph
 {
 protected:
 	vector<vertex> m_vertexes;
-	int m_num_of_vertexes, m_num_of_edges;
+	int m_num_of_vertices, m_num_of_edges;
 
 public:
-	graph(int i_num_of_vertexes, int i_num_of_edges);
+	graph(int i_num_of_vertices, int i_num_of_edges);
 	virtual ~graph() = default;
 	virtual vector<vertex> get_vertexes() const { return m_vertexes; }
-	virtual int get_num_of_vertexes() const { return m_num_of_vertexes; }
+	virtual int get_num_of_vertexes() const { return m_num_of_vertices; }
 	virtual int get_num_of_edges() const { return m_num_of_edges; }
 	virtual vertex& get_vertex_by_value(int i_value) { return m_vertexes[i_value - 1]; }
 	virtual void set_edge(vertex& i_src, vertex& i_dst) = 0;
@@ -28,6 +28,6 @@ public:
 	virtual bool is_connected() = 0;
 	virtual graph* get_dummy_graph() = 0;
 	virtual vector<pair<int, int>> find_bridges() = 0;
-	virtual vertex& get_real_nighbor(vertex& i_src) = 0;
+	virtual vertex& get_real_neighbor(vertex& i_src) = 0;
 	virtual bool edge_exists(int i_src, int i_dst) = 0;
 };

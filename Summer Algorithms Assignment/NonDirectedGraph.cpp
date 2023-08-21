@@ -19,9 +19,9 @@ void non_directed_graph::mark_edge(vertex& i_current_vertex, vertex& i_neighbor_
 }
 
 // Check if all the vertexes in the graph have even degrees
-bool non_directed_graph::is_even_degrees()
+bool non_directed_graph::is_even_degrees() const
 {
-    for (auto& vertex : m_vertexes)
+    for (const vertex& vertex : m_vertexes)
     {
         if (vertex.get_degree() % 2 != 0)
             return false;
@@ -45,7 +45,7 @@ bool non_directed_graph::is_connected()
 }
 
 // Check if an edge exists between two vertexes
-bool non_directed_graph::edge_exists(int i_src, int i_dst)
+bool non_directed_graph::edge_exists(const int i_src, const int i_dst)
 {
     return get_vertex_by_value(i_src).neighbor_exists(get_vertex_by_value(i_dst));
 }
@@ -151,7 +151,7 @@ void non_directed_graph::DFS_on_transposed_with_ending_list(directed_graph* tran
 // Returns a directed graph from this non directed graph using a DFS run.
 directed_graph* non_directed_graph::get_directed_graph(list<vertex>& ending_list) {
     set_all_white();
-    directed_graph* directed = new directed_graph(m_num_of_vertexes, m_num_of_edges);
+    directed_graph* directed = new directed_graph(m_num_of_vertices, m_num_of_edges);
     vector<vertex> my_vertexes = get_vertexes();
 
     for (vertex & v : my_vertexes)

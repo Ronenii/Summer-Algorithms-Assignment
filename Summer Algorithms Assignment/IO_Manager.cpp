@@ -40,10 +40,10 @@ void io_manager::run_program()
 // returns said graph.
 graph* io_manager::get_user_input()
 {
-	int vertices, edges;
-
 	try
 	{
+		int edges;
+		int vertices;
 		get_vertexes_and_edges_input(vertices, edges);
 		non_directed_graph* ndg = new non_directed_graph(vertices, edges);
 		return ndg;

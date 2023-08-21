@@ -1,9 +1,9 @@
 #include "Graph.h"
 
 // Initializes a graph with the given number of vertices.
-graph::graph(int i_num_of_vertexes, int i_num_of_edges) : m_num_of_vertexes(i_num_of_vertexes), m_num_of_edges(i_num_of_edges)
+graph::graph(int i_num_of_vertices, int i_num_of_edges) : m_num_of_vertices(i_num_of_vertices), m_num_of_edges(i_num_of_edges)
 {
-	for (int i = 0; i < i_num_of_vertexes; i++)
+	for (int i = 0; i < i_num_of_vertices; i++)
 	{
 		m_vertexes.push_back(vertex(i + 1));
 	}

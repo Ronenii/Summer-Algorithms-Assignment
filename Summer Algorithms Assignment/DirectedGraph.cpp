@@ -45,7 +45,7 @@ void directed_graph::mark_edge(vertex& i_current_vertex, vertex& i_neighbor_vert
 // Returns the transposed version of this directed graph.
 directed_graph* directed_graph::get_transposed()
 {
-    directed_graph* transposed = new directed_graph(m_num_of_vertexes, m_num_of_edges);
+    directed_graph* transposed = new directed_graph(m_num_of_vertices, m_num_of_edges);
     vertex src;
     vertex dst;
 
@@ -63,14 +63,14 @@ directed_graph* directed_graph::get_transposed()
 }
 
 // A DFS visit with a modification that marks each vertex with a representative.
-void directed_graph::visit_and_mark_rep(vertex& i_vertex, const int rep)
+void directed_graph::visit_and_mark_rep(vertex& i_vertex, const int i_rep)
 {
-    vertex& real_vertex = get_real_nighbor(i_vertex);
+    vertex& real_vertex = get_real_neighbor(i_vertex);
 
     // if the vertex has no rep, set it to be the rep. This means it's the first time we see it.
     if(real_vertex.get_rep() == -1) {
-        i_vertex.set_rep(rep);
-        real_vertex.set_rep(rep);
+        i_vertex.set_rep(i_rep);
+        real_vertex.set_rep(i_rep);
     }
 
     const list<vertex>& neighbors = i_vertex.get_neighbors();
@@ -85,7 +85,7 @@ void directed_graph::visit_and_mark_rep(vertex& i_vertex, const int rep)
             vertex& real_neighbor = m_vertexes[v.get_value() - 1];
             if (real_neighbor.get_color() == Color::WHITE)
             {
-                visit_and_mark_rep(real_neighbor, rep);
+                visit_and_mark_rep(real_neighbor, i_rep);
             }
         }
         i_vertex.set_color(Color::BLACK);
