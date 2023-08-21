@@ -14,12 +14,14 @@ void io_manager::run_program()
 		if (complete_edges_counter == input_graph->get_num_of_edges())
 		{
 			const vector<pair<int, int>> bridges = input_graph->find_bridges();
-
+            
+            // If the graph is not connected, we can't find bridges.
 			if(input_graph->is_connected() == 0)
 			{
 				cout << "\nGraph is not connected\n";
 				return;
 			}
+            // If the graph is connected and there are no bridges.
            	else if(bridges.empty()) {
 				cout << "\nNo bridges in graph\n";
 			}

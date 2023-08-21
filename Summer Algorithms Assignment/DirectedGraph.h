@@ -15,8 +15,7 @@ public:
     bool is_graph_strongly_connected();
     directed_graph* get_transposed();
     void visit_and_mark_rep(vertex& i_vertex, int rep);
-    bool all_degrees_equal();
-    list<vertex> &get_ending_list() { return ending_list; }
+    list<vertex>& get_ending_list() { return ending_list; }
     void mark_edge(vertex& i_current_vertex, vertex& i_neighbor_vertex) override;
     graph* get_dummy_graph() override;
     bool is_connected() override;

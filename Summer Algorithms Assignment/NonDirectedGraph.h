@@ -16,8 +16,6 @@ public:
 	void mark_edge(vertex& i_current_vertex, vertex& i_neighbor_vertex) override;
 	void visit_and_direct(vertex& i_vertex, graph& i_directed_graph, list<vertex>& ending_list, const int parent);
 	bool is_even_degrees();
-    vector<vector<int>> stronglyConnectedComponents();
-    vector<vertex> transpose(vector<vertex> &i_vertexes);
 	vector<pair<int, int>> find_bridges() override;
 	graph* get_dummy_graph() override;
     bool is_connected() override;
