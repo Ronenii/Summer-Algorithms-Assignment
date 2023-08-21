@@ -23,7 +23,7 @@ graph* non_directed_graph::get_dummy_graph()
 bool non_directed_graph::is_connected()
 {
     set_all_white();
-    visit(m_vertexes[0]);
+    visit(m_vertices[0]);
 
     return is_all_black();
 }
@@ -46,15 +46,15 @@ void non_directed_graph::visit_and_direct(vertex& i_vertex, graph& i_directed_gr
 
         for (const vertex& v : neighbors)
         {
-            vertex& real_neighbor = m_vertexes[v.get_value() - 1];
+            vertex& real_neighbor = m_vertices[v.get_id() - 1];
 
              if (real_neighbor.get_color() == Color::WHITE)
              {
-                i_directed_graph.set_edge(i_vertex.get_value(), real_neighbor.get_value());
-                visit_and_direct(real_neighbor, i_directed_graph, ending_list, i_vertex.get_value());
+                i_directed_graph.set_edge(i_vertex.get_id(), real_neighbor.get_id());
+                visit_and_direct(real_neighbor, i_directed_graph, ending_list, i_vertex.get_id());
              }
-             else if(real_neighbor.get_value() != parent && !i_directed_graph.edge_exists(real_neighbor.get_value(), i_vertex.get_value())){
-                    i_directed_graph.set_edge(i_vertex.get_value(), real_neighbor.get_value());
+             else if(real_neighbor.get_id() != parent && !i_directed_graph.edge_exists(real_neighbor.get_id(), i_vertex.get_id())){
+                    i_directed_graph.set_edge(i_vertex.get_id(), real_neighbor.get_id());
              }
 
         }
@@ -101,7 +101,7 @@ vector<pair<int, int>>& non_directed_graph::scan_for_bridges(directed_graph& dir
         vertex& end2 = directed_graph_transposed.get_vertex_by_id(p.second);
 	    if(end1.get_rep() != end2.get_rep())
 	    {
-            bridges->emplace_back(end1.get_value(), end2.get_value());
+            bridges->emplace_back(end1.get_id(), end2.get_id());
 	    }
     }
 
@@ -115,8 +115,8 @@ void non_directed_graph::mark_strongly_connected_components(directed_graph* tran
     this->set_all_white();
     while (!ending_list.empty())
     {
-        int entry_vertex_value = ending_list.back().get_value();
-        vertex& real_entry_vertex = this->m_vertexes[entry_vertex_value - 1];
+        int entry_vertex_value = ending_list.back().get_id();
+        vertex& real_entry_vertex = this->m_vertices[entry_vertex_value - 1];
 
         if(real_entry_vertex.get_color() == Color::BLACK){
 
@@ -142,7 +142,7 @@ directed_graph* non_directed_graph::get_directed_graph(list<vertex>& ending_list
 
     for (vertex & v : my_vertexes)
     {
-        vertex& real_vertex = m_vertexes[v.get_value() - 1];
+        vertex& real_vertex = m_vertices[v.get_id() - 1];
         visit_and_direct(real_vertex, *directed, ending_list, -1);
     }
 
@@ -162,5 +162,5 @@ void non_directed_graph::set_ending_list_white(list<vertex>& ending_list)
 }
 
 void non_directed_graph::set_edge(const int i_src, const int i_dst) {
-    set_edge(m_vertexes[i_src], m_vertexes[i_dst]);
+    set_edge(m_vertices[i_src], m_vertices[i_dst]);
 }

@@ -5,21 +5,21 @@ graph::graph(int i_num_of_vertices, int i_num_of_edges) : m_num_of_vertices(i_nu
 {
 	for (int i = 0; i < i_num_of_vertices; i++)
 	{
-		m_vertexes.push_back(vertex(i + 1));
+		m_vertices.push_back(vertex(i + 1));
 	}
 }
 
 // Set all vertices to be white
 void graph::set_all_white()
 {
-	for (auto& vertex : m_vertexes)
+	for (auto& vertex : m_vertices)
 		vertex.set_color(Color::WHITE);
 }
 
 // Returns if all of the graphs vertices are black
 bool graph::is_all_black()
 {
-	for (auto& vertex : m_vertexes)
+	for (auto& vertex : m_vertices)
 	{
 		if (vertex.get_color() != Color::BLACK)
 			return false;
@@ -37,7 +37,7 @@ void graph::visit(vertex& i_vertex)
 	i_vertex.set_color(Color::GRAY);
 	for (auto& neighbor : neighbors)
 	{
-		vertex& real_neighbor = m_vertexes[neighbor.get_value() - 1];
+		vertex& real_neighbor = m_vertices[neighbor.get_id() - 1];
         if(real_neighbor.get_color() != Color::WHITE){
             continue;
         }
@@ -47,7 +47,7 @@ void graph::visit(vertex& i_vertex)
 
         // mark the parent of the neighbor
         // This is for the purpose of finding the SCC later
-        real_neighbor.set_rep(i_vertex);
+        real_neighbor.set_rep(i_vertex.get_id());
 
 		visit(real_neighbor);
 	}
