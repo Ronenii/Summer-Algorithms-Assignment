@@ -14,7 +14,7 @@ bool vertex::neighbor_exists(const vertex& i_neighbor) const
 {
 	for(const vertex& neighbor : m_neighbors)
 	{
-		if (i_neighbor.m_value == neighbor.m_value)
+		if (i_neighbor.m_id == neighbor.m_id)
 		{
 			return true;
 		}
@@ -29,11 +29,6 @@ bool vertex::has_neighbors() const
 	return !m_neighbors.empty();
 }
 
-// Sets the representative of the vertex to be the given vertex
 void vertex::set_rep(const vertex &i_vertex) {
-    m_rep = i_vertex.m_value;
-}
-
-void vertex::set_rep(vertex &vertex) {
-    m_rep = vertex.m_value;
+    m_rep = i_vertex.m_id;
 }

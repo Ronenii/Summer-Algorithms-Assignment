@@ -4,7 +4,7 @@ void directed_graph::set_edge(vertex& i_src, vertex& i_dst)
 {
     // if the dst vertex has no parent meaning it's the first time we see it
     if (i_dst.get_parent() == -1) {
-        i_dst.set_parent(i_src.get_value());
+        i_dst.set_parent(i_src.get_id());
     }
     
     // Adding the edge to the graph and updating the degrees.
@@ -47,12 +47,12 @@ directed_graph* directed_graph::get_transposed()
     vertex src;
     vertex dst;
 
-    for(vertex& v: m_vertexes)
+    for(vertex& v: m_vertices)
     {
-        vertex& dst = transposed->get_vertex_by_id(v.get_value());
+        vertex& dst = transposed->get_vertex_by_id(v.get_id());
         for(const vertex & neighbor: v.get_neighbors())
         {
-            vertex& src = transposed->get_vertex_by_id(neighbor.get_value());
+            vertex& src = transposed->get_vertex_by_id(neighbor.get_id());
             transposed->set_edge(src,dst);
         }
     }
@@ -80,7 +80,7 @@ void directed_graph::visit_and_mark_rep(vertex& i_vertex, const int i_rep)
 
         for (const vertex& v : neighbors)
         {
-            vertex& real_neighbor = m_vertexes[v.get_value() - 1];
+            vertex& real_neighbor = m_vertices[v.get_id() - 1];
             if (real_neighbor.get_color() == Color::WHITE)
             {
                 visit_and_mark_rep(real_neighbor, i_rep);
@@ -89,19 +89,6 @@ void directed_graph::visit_and_mark_rep(vertex& i_vertex, const int i_rep)
         i_vertex.set_color(Color::BLACK);
         real_vertex.set_color(Color::BLACK);
     }
-}
-
-bool directed_graph::all_degrees_equal()
-{
-    for(auto & v: m_vertexes)
-    {
-        if (v.get_in_degree() != v.get_out_degree())
-        {
-            return false;
-        }
-    }
-
-    return true;
 }
 
 graph* directed_graph::get_dummy_graph()

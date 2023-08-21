@@ -21,5 +21,5 @@ public:
     bool is_connected() override;
     vector<pair<int, int>> find_bridges(vector<pair<int, int>> i_edges) override;
     directed_graph* get_directed_graph(list<vertex>& ending_list) override { return this;}
-    vertex& get_real_neighbor(vertex& i_src) override { return m_vertexes[i_src.get_value() - 1]; }
+    vertex& get_real_neighbor(vertex& i_src) override { return m_vertices[i_src.get_id() - 1]; }
 };
